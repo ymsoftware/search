@@ -25,9 +25,14 @@ public class SearchTests {
 
     @Test
     public void testRequest() throws JsonParsingException {
-        String json = "{ \"query\": \"+messi +barcelona\" }";
+        String json = "{ \"query\": \"+messi +barcelona\", \"media_types\": [ \"text\", \"photo\" ] }";
         InputStream stream = new ByteArrayInputStream(json.getBytes(StandardCharsets.UTF_8));
         SearchRequest request = new SearchRequest(stream);
         Assert.assertTrue(request.getQuery().equals("+messi +barcelona"));
+
+        String[] types = request.getMediaTypes();
+        Assert.assertTrue(types.length == 2);
+        Assert.assertTrue(types[0].equals("text"));
+        Assert.assertTrue(types[1].equals("photo"));
     }
 }
