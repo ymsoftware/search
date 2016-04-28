@@ -7,12 +7,12 @@ import java.util.List;
  * Created by yuri on 4/26/16.
  */
 public abstract class JsonParser {
-    private int depth = 0;
-    private boolean isField = false;
-    private boolean isArray = false;
-    private String[] field = null;
-    private List array = null;
-    private JsonVisitor visitor = null;
+    private int depth;
+    private boolean isField;
+    private boolean isArray;
+    private String[] field;
+    private List array;
+    private JsonVisitor visitor;
 
     protected int position = 0;
 

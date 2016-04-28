@@ -7,7 +7,7 @@ import java.io.InputStream;
  * Created by yuri on 4/26/16.
  */
 public class JsonInputStreamParser extends JsonParser {
-    private InputStream inputstream = null;
+    private final InputStream inputstream;
 
     public JsonInputStreamParser(InputStream inputstream) {
         this.inputstream = inputstream;

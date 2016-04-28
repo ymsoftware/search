@@ -7,7 +7,7 @@ import java.util.List;
  * Created by yuri on 4/24/16.
  */
 public class JsonStringParser extends JsonParser {
-    private char[] chars = null;
+    private char[] chars;
 
     public JsonStringParser(String json) {
         if (json != null && json.length() > 0) {
