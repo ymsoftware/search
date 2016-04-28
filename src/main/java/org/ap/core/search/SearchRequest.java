@@ -4,6 +4,9 @@ import org.ap.core.json.*;
 
 import java.io.InputStream;
 import java.util.Arrays;
+import java.util.List;
+
+import static java.lang.Math.toIntExact;
 
 /**
  * Created by yuri on 4/28/16.
@@ -72,17 +75,15 @@ public class SearchRequest implements JsonVisitor {
     @Override
     public void visit(JsonProperty jp) {
         if (jp.field.equals("query")) {
-            setQuery((String) jp.value);
+            setQuery(jp.valueAsString());
         } else if (jp.field.equals("media_types")) {
-            Object[] values = (Object[]) jp.value;
-            setMediaTypes(Arrays.copyOf(values, values.length, String[].class));
+            setMediaTypes(jp.valueAsStringArray());
         } else if (jp.field.equals("fields")) {
-            Object[] values = (Object[]) jp.value;
-            setFields(Arrays.copyOf(values, values.length, String[].class));
+            setFields(jp.valueAsStringArray());
         } else if (jp.field.equals("from")) {
-            setFrom((int) jp.value);
+            setFrom(jp.valueAsInt());
         } else if (jp.field.equals("size")) {
-            setSize((int) jp.value);
+            setSize(jp.valueAsInt());
         }
     }
 }

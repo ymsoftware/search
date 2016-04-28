@@ -36,7 +36,7 @@ public abstract class JsonParser {
                 break;
             case ']':
                 if (this.isField) {
-                    JsonProperty jp = new JsonProperty(getField(), this.array.toArray());
+                    JsonProperty jp = new JsonProperty(getField(), this.array);
                     this.visitor.visit(jp);
                 }
                 this.isArray = false;

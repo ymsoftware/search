@@ -5,6 +5,8 @@ import org.ap.core.search.SearchConfig;
 
 import java.io.InputStream;
 
+import static java.lang.Math.toIntExact;
+
 /**
  * Created by yuri on 4/28/16.
  */
@@ -26,15 +28,15 @@ public class ConfigManager implements JsonVisitor {
     @Override
     public void visit(JsonProperty jp) {
         if (jp.field.equals("search.host")) {
-            this.searchConfig.setHost((String) jp.value);
+            this.searchConfig.setHost(jp.valueAsString());
         } else if (jp.field.equals("search.cluster")) {
-            this.searchConfig.setCluster((String) jp.value);
+            this.searchConfig.setCluster(jp.valueAsString());
         }else if (jp.field.equals("search.port")) {
-            this.searchConfig.setPort((int) jp.value);
+            this.searchConfig.setPort(jp.valueAsInt());
         }else if (jp.field.equals("search.index")) {
-            this.searchConfig.setIndex((String) jp.value);
+            this.searchConfig.setIndex(jp.valueAsString());
         } else if (jp.field.equals("search.type")) {
-            this.searchConfig.setType((String) jp.value);
+            this.searchConfig.setType(jp.valueAsString());
         }
     }
 }
