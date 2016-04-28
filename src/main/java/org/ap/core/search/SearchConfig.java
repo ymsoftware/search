@@ -9,6 +9,8 @@ public class SearchConfig {
     private int port;
     private String index;
     private String type;
+    private String[] fields;
+    private String defaultOperator;
 
     public String getHost() {
         return this.host;
@@ -52,6 +54,24 @@ public class SearchConfig {
 
     public SearchConfig setType(String type) {
         this.type = type;
+        return this;
+    }
+
+    public String[] getFields() {
+        return this.fields;
+    }
+
+    public SearchConfig setFields(String[] fields) {
+        this.fields = fields;
+        return this;
+    }
+
+    public String getDefaultOperator() {
+        return this.defaultOperator;
+    }
+
+    public SearchConfig setDefaultOperator(String defaultOperator) {
+        this.defaultOperator = defaultOperator;
         return this;
     }
 }

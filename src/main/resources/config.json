@@ -4,6 +4,11 @@
     "cluster": "ym",
     "port": 9310,
     "index": "appl",
-    "type": "doc"
+    "type": "doc",
+    "fields": [
+      "main.nitf",
+      "headline^5",
+      "title^4"
+    ]
   }
 }

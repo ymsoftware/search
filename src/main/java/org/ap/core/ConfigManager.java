@@ -27,16 +27,20 @@ public class ConfigManager implements JsonVisitor {
 
     @Override
     public void visit(JsonProperty jp) {
-        if (jp.field.equals("search.host")) {
+        if (jp.field.equals(Constants.CONFIG_SEARCH_HOST)) {
             this.searchConfig.setHost(jp.valueAsString());
-        } else if (jp.field.equals("search.cluster")) {
+        } else if (jp.field.equals(Constants.CONFIG_SEARCH_CLUSTER)) {
             this.searchConfig.setCluster(jp.valueAsString());
-        }else if (jp.field.equals("search.port")) {
+        } else if (jp.field.equals(Constants.CONFIG_SEARCH_PORT)) {
             this.searchConfig.setPort(jp.valueAsInt());
-        }else if (jp.field.equals("search.index")) {
+        } else if (jp.field.equals(Constants.CONFIG_SEARCH_INDEX)) {
             this.searchConfig.setIndex(jp.valueAsString());
-        } else if (jp.field.equals("search.type")) {
+        } else if (jp.field.equals(Constants.CONFIG_SEARCH_TYPE)) {
             this.searchConfig.setType(jp.valueAsString());
+        } else if (jp.field.equals(Constants.CONFIG_SEARCH_FIELDS)) {
+            this.searchConfig.setFields(jp.valueAsStringArray());
+        } else if (jp.field.equals(Constants.CONFIG_SEARCH_OPERATOR)) {
+            this.searchConfig.setDefaultOperator(jp.valueAsString());
         }
     }
 }

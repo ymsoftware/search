@@ -63,7 +63,7 @@ public class JsonProperty {
         List list = (List) this.value;
         int[] values = new int[list.size()];
         for (int i = 0; i < list.size(); i++) {
-            values[i] = (int) list.get(i);
+            values[i] = toIntExact((long) list.get(i));
         }
         return values;
     }
