@@ -1,4 +1,4 @@
-import json.*;
+import org.ap.core.json.*;
 import org.junit.Assert;
 import org.junit.Test;
 

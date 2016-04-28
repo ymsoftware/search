@@ -1,5 +1,7 @@
-import json.*;
-import search.SearchConfig;
+package org.ap.core;
+
+import org.ap.core.json.*;
+import org.ap.core.search.SearchConfig;
 
 import java.io.InputStream;
 
@@ -23,7 +25,13 @@ public class ConfigManager implements JsonVisitor {
 
     @Override
     public void visit(JsonProperty jp) {
-        if (jp.field.equals("search.index")) {
+        if (jp.field.equals("search.host")) {
+            this.searchConfig.setHost((String) jp.value);
+        } else if (jp.field.equals("search.cluster")) {
+            this.searchConfig.setCluster((String) jp.value);
+        }else if (jp.field.equals("search.port")) {
+            this.searchConfig.setPort((int) jp.value);
+        }else if (jp.field.equals("search.index")) {
             this.searchConfig.setIndex((String) jp.value);
         } else if (jp.field.equals("search.type")) {
             this.searchConfig.setType((String) jp.value);

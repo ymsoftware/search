@@ -1,10 +1,9 @@
-import json.JsonParser;
-import json.JsonParsingException;
-import json.JsonStringParser;
+import org.ap.core.json.JsonParsingException;
+import org.ap.core.ConfigManager;
 import org.junit.Assert;
 import org.junit.Test;
-import search.SearchConfig;
-import search.SearchRequest;
+import org.ap.core.search.SearchConfig;
+import org.ap.core.search.SearchRequest;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;

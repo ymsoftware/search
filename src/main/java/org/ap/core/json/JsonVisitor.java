@@ -1,4 +1,4 @@
-package json;
+package org.ap.core.json;
 
 /**
  * Created by yuri on 4/24/16.

@@ -1,4 +1,4 @@
-package json;
+package org.ap.core.json;
 
 import java.io.IOException;
 import java.io.InputStream;

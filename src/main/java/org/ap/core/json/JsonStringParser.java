@@ -1,7 +1,4 @@
-package json;
-
-import java.util.ArrayList;
-import java.util.List;
+package org.ap.core.json;
 
 /**
  * Created by yuri on 4/24/16.
