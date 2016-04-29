@@ -25,13 +25,17 @@ public class SearchHandler implements NginxJavaRingHandler {
         NginxJavaRequest r = ((NginxJavaRequest) request);
         NginxHttpServerChannel channel = r.handler().hijack(r, true);
 
-        InputStream stream = (InputStream) r.get("body");
-
         SearchRequest req = null;
-        try {
-            req = new SearchRequest(stream);
-        } catch (JsonParsingException e) {
-            e.printStackTrace();
+
+        Object body = r.get("body");
+        if (body != null) {
+            InputStream stream = (InputStream) body;
+
+            try {
+                req = new SearchRequest(stream);
+            } catch (JsonParsingException e) {
+                e.printStackTrace();
+            }
         }
 
         SearchService svc = Startup.getInstance().getSearch();

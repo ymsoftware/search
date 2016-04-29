@@ -45,6 +45,7 @@ public class Startup {
         configs.load("config.json");
         this.config = configs;
 
+        initSearch();
     }
 
     private void initSearch() {
@@ -73,7 +74,7 @@ public class Startup {
         } else {
             Settings settings = Settings
                     .settingsBuilder()
-                    .put("cluster.name", config.getCluster())
+                    .put("cluster.name", cluster)
                     .build();
 
             client = TransportClient

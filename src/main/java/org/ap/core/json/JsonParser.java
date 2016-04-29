@@ -129,6 +129,7 @@ public abstract class JsonParser {
         sb.append(first);
         boolean isNegative = first == '-';
         boolean isZero = first == '0';
+        boolean checkZero = isZero || isNegative;
 
         char chr = 0;
 
@@ -145,16 +146,21 @@ public abstract class JsonParser {
                 case '8':
                 case '9':
                     if (isZero) throw JsonParsingException.UNEXPECTED_CHARACTER(chr, "number", this.position);
+                    checkZero = false;
                     sb.append(chr);
                     break;
                 case '0':
                     if (isZero) throw JsonParsingException.UNEXPECTED_CHARACTER(chr, "number", this.position);
-                    isZero = true;
+                    if (checkZero) {
+                        checkZero = false;
+                        isZero = true;
+                    }
                     sb.append(chr);
                     break;
                 case '.':
                     if (isDecimal) throw JsonParsingException.UNEXPECTED_CHARACTER(chr, "number", this.position);
 
+                    checkZero = false;
                     isZero = false;
                     isDecimal = true;
                     sb.append(chr);

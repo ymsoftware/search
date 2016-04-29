@@ -30,7 +30,7 @@ public class SearchService {
         }
 
         String operator = config.getDefaultOperator();
-        if (operator.equalsIgnoreCase(Constants.QSQ_AND_OPERATOR)) {
+        if (operator != null && operator.equalsIgnoreCase(Constants.QSQ_AND_OPERATOR)) {
             qsq.setDefaultOperator(QSQBuilder.Operator.AND);
         }
 
