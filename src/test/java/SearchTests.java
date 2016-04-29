@@ -1,5 +1,10 @@
 import org.ap.core.json.JsonParsingException;
 import org.ap.core.ConfigManager;
+import org.ap.core.search.QSQBuilder;
+import org.elasticsearch.action.search.SearchRequestBuilder;
+import org.elasticsearch.client.Client;
+import org.elasticsearch.client.transport.TransportClient;
+import org.elasticsearch.common.transport.InetSocketTransportAddress;
 import org.junit.Assert;
 import org.junit.Test;
 import org.ap.core.search.SearchConfig;
@@ -67,5 +72,12 @@ public class SearchTests {
         Assert.assertTrue(hours == 2);
 
         Assert.assertTrue(request.getSize() == 20);
+
+//        Client client = TransportClient.builder().build();
+//        SearchRequestBuilder rb = client.prepareSearch("index");
+//        QSQBuilder qsq = new QSQBuilder();
+//        qsq.setFields(new String[]{"itemid", "heaadline^5", "title^4"});
+//        request.read(rb, qsq);
+//        json = rb.toString();
     }
 }
