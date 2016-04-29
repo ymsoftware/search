@@ -1,0 +1,68 @@
+sudo yum install wget -y
+sudo yum install vim-enhanced -y
+sudo yum install zip unzip -y
+sudo yum install libjpeg-turbo -y
+sudo yum install libpng12 -y
+sudo yum install fontconfig -y
+
+cd /usr
+sudo mkdir java
+cd java
+sudo wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/8u91-b14/jdk-8u91-linux-x64.rpm"
+sudo rpm -Uvh jdk-8u91-linux-x64.rpm
+java -version
+
+cd /usr
+sudo mkdir maven
+cd maven
+sudo wget http://supergsego.com/apache/maven/maven-3/3.3.9/binaries/apache-maven-3.3.9-bin.tar.gz
+sudo tar -zxf apache-maven-3.3.9-bin.tar.gz
+sudo rm apache-maven-3.3.9-bin.tar.gz
+export PATH=/usr/maven/apache-maven-3.3.9/bin:$PATH
+mvn -v
+
+sudo rpm --import https://packages.elastic.co/GPG-KEY-elasticsearch
+sudo vim /etc/yum.repos.d/elasticsearch.repo
+
+#[elasticsearch-2.x]
+#name=Elasticsearch repository for 2.x packages
+#baseurl=https://packages.elastic.co/elasticsearch/2.x/centos
+#gpgcheck=1
+#gpgkey=https://packages.elastic.co/GPG-KEY-elasticsearch
+#enabled=1
+
+sudo yum install elasticsearch
+sudo chkconfig --add elasticsearch
+sudo service elasticsearch start
+curl http://localhost:9200
+
+cd /usr
+sudo mkdir nginx
+cd nginx
+sudo wget https://sourceforge.net/projects/nginx-clojure/files/nginx-clojure-0.4.4.tar.gz
+sudo tar -zxf nginx-clojure-0.4.4.tar.gz
+sudo rm nginx-clojure-0.4.4.tar.gz
+cd nginx-clojure-0.4.4
+sudo cp nginx-linux-x64 nginx
+sudo rm nginx-linux-x64
+
+sudo mkdir java
+cd java
+sudo wget https://github.com/ymsoftware/search/archive/master.zip
+sudo unzip master.zip
+sudo rm master.zip
+sudo -i
+cd /usr/nginx/nginx-clojure-0.4.4/java/search-master
+export PATH=/usr/maven/apache-maven-3.3.9/bin:$PATH
+mvn -v
+mvn package
+vim /usr/nginx/nginx-clojure-0.4.4/conf/nginx.conf
+#jvm_classpath "java/search-master/target/*";
+#        location /api/search {
+#                proxy_request_buffering on;
+#                always_read_body on;
+#                content_handler_type java;
+#                content_handler_name org.ap.core.nginx.SearchHandler;
+#       }
+
+
