@@ -14,6 +14,7 @@ public class RoutingHandler implements NginxJavaRingHandler {
 
     public RoutingHandler() {
         handlers.put(Constants.API_SEARCH_URI, new SearchHandler());
+        handlers.put(Constants.API_SEARCH_QUERY_URI, new SearchQueryHandler());
     }
 
     @Override

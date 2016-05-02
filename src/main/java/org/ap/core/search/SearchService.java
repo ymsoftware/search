@@ -38,23 +38,24 @@ public class SearchService {
     }
 
     public String execute(SearchRequest request) {
-        QueryBuilder qsq = null;
-        BoolQueryBuilder bool = QueryBuilders.boolQuery();
-        boolean useBool = false;
-
-        SearchRequestBuilder rb = client
-                .prepareSearch(this.config.getIndex())
-                .setTypes(this.config.getType());
-        //.setSearchType(SearchType.DFS_QUERY_THEN_FETCH);
-
-        if (request != null) {
-            request.read(rb, this.qsq);
-        }
+        SearchRequestBuilder rb = getSearchRequestBuilder(request);
 
         SearchResponse response = rb
                 .execute()
                 .actionGet();
 
         return response.toString();
+    }
+
+    public SearchRequestBuilder getSearchRequestBuilder(SearchRequest request) {
+        SearchRequestBuilder rb = client
+                .prepareSearch(this.config.getIndex())
+                .setTypes(this.config.getType());
+
+        if (request != null) {
+            request.read(rb, this.qsq);
+        }
+
+        return rb;
     }
 }

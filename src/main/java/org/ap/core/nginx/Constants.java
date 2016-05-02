@@ -12,6 +12,7 @@ public class Constants {
     public static final String REQUEST_URI = "uri";
 
     public static final String API_SEARCH_URI = "/api/search";
+    public static final String API_SEARCH_QUERY_URI = "/api/search/query";
 
     public static final ArrayMap JSON_CONTENT_TYPE = ArrayMap.create(CONTENT_TYPE, "text/json");
 }
