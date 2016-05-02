@@ -13,13 +13,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
 
-import static nginx.clojure.MiniConstants.CONTENT_TYPE;
 import static nginx.clojure.MiniConstants.NGX_HTTP_OK;
 
 /**
  * Created by ymetelkin on 4/28/16.
  */
 public class SearchHandler implements NginxJavaRingHandler {
+    private final SearchService search = Startup.getInstance().getSearch();
+
     @Override
     public Object[] invoke(Map<String, Object> request) throws IOException {
         NginxJavaRequest r = ((NginxJavaRequest) request);
@@ -27,7 +28,7 @@ public class SearchHandler implements NginxJavaRingHandler {
 
         SearchRequest req = null;
 
-        Object body = r.get("body");
+        Object body = r.get(Constants.REQUEST_BODY);
         if (body != null) {
             InputStream stream = (InputStream) body;
 
@@ -38,11 +39,11 @@ public class SearchHandler implements NginxJavaRingHandler {
             }
         }
 
-        SearchService svc = Startup.getInstance().getSearch();
-        String json = svc.execute(req);
+        String json = this.search.execute(req);
 
-        channel.sendResponse(new Object[]{NGX_HTTP_OK,
-                ArrayMap.create(CONTENT_TYPE, "text/json"),
+        channel.sendResponse(new Object[]{
+                NGX_HTTP_OK,
+                Constants.JSON_CONTENT_TYPE,
                 json});
 
         return null;
