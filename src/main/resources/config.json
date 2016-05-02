@@ -1,7 +1,7 @@
 {
   "search": {
     "host": "127.0.0.1",
-    "cluster": "ym",
+    "cluster": "ap",
     "port": 9310,
     "index": "appl",
     "type": "doc",
