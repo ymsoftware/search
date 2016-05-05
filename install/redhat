@@ -12,15 +12,6 @@ sudo wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%
 sudo rpm -Uvh jdk-8u91-linux-x64.rpm
 java -version
 
-cd /usr
-sudo mkdir maven
-cd maven
-sudo wget http://supergsego.com/apache/maven/maven-3/3.3.9/binaries/apache-maven-3.3.9-bin.tar.gz
-sudo tar -zxf apache-maven-3.3.9-bin.tar.gz
-sudo rm apache-maven-3.3.9-bin.tar.gz
-export PATH=/usr/maven/apache-maven-3.3.9/bin:$PATH
-mvn -v
-
 sudo rpm --import https://packages.elastic.co/GPG-KEY-elasticsearch
 sudo vim /etc/yum.repos.d/elasticsearch.repo
 
@@ -31,10 +22,26 @@ sudo vim /etc/yum.repos.d/elasticsearch.repo
 #gpgkey=https://packages.elastic.co/GPG-KEY-elasticsearch
 #enabled=1
 
-sudo yum install elasticsearch
+sudo yum install elasticsearch -y
 sudo chkconfig --add elasticsearch
+
+sudo vim /etc/elasticsearch/elasticsearch.yml
+
+#cluster.name: ap
+#network.host: 0.0.0.0
+#transport.tcp.port: 9310
+
 sudo service elasticsearch start
 curl http://localhost:9200
+
+cd /usr
+sudo mkdir maven
+cd maven
+sudo wget http://supergsego.com/apache/maven/maven-3/3.3.9/binaries/apache-maven-3.3.9-bin.tar.gz
+sudo tar -zxf apache-maven-3.3.9-bin.tar.gz
+sudo rm apache-maven-3.3.9-bin.tar.gz
+export PATH=/usr/maven/apache-maven-3.3.9/bin:$PATH
+mvn -v
 
 cd /usr
 sudo mkdir nginx

@@ -53,8 +53,8 @@ public class Startup {
 
         SearchConfig config = this.config.getSearchConfig();
 
-        String host = config.getHost();
-        if (host == null || host.length() == 0) {
+        String host = Helpers.safeTrim(config.getHost());
+        if (host == null) {
             host = "127.0.0.1";
         }
 
@@ -65,8 +65,8 @@ public class Startup {
 
         InetSocketTransportAddress address = new InetSocketTransportAddress(new InetSocketAddress(host, port));
 
-        String cluster = config.getCluster();
-        if (cluster == null || cluster.length() == 0) {
+        String cluster = Helpers.safeTrim(config.getCluster());
+        if (cluster == null) {
             client = TransportClient
                     .builder()
                     .build()

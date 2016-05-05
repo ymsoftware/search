@@ -3,14 +3,9 @@ package org.ap.core.search;
 import org.ap.core.json.*;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 
 import java.io.InputStream;
-import java.util.Arrays;
-import java.util.List;
-
-import static java.lang.Math.toIntExact;
 
 /**
  * Created by yuri on 4/28/16.
@@ -116,8 +111,8 @@ public class SearchRequest implements JsonVisitor {
         parser.parse(this);
     }
 
-    public void read(SearchRequestBuilder requestBuilder, QSQBuilder qsqTemplate) {
-        QSQBuilder qsq = null;
+    public void read(SearchRequestBuilder requestBuilder, QueryStringBuilder qsqTemplate) {
+        QueryStringBuilder qsq = null;
         BoolQueryBuilder bool = QueryBuilders.boolQuery();
         boolean useBool = false;
 

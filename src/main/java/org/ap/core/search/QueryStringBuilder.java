@@ -9,12 +9,12 @@ import java.util.Locale;
 /**
  * Created by ymetelkin on 4/28/16.
  */
-public class QSQBuilder extends QueryBuilder {
+public class QueryStringBuilder extends QueryBuilder {
     private String query;
-    private QSQBuilder.Operator defaultOperator;
+    private QueryStringBuilder.Operator defaultOperator;
     private String[] fields;
 
-    public QSQBuilder setQuery(String query) {
+    public QueryStringBuilder setQuery(String query) {
         this.query = query;
         return this;
     }
@@ -27,7 +27,7 @@ public class QSQBuilder extends QueryBuilder {
         return this.defaultOperator;
     }
 
-    public QSQBuilder setDefaultOperator(Operator defaultOperator) {
+    public QueryStringBuilder setDefaultOperator(Operator defaultOperator) {
         this.defaultOperator = defaultOperator;
         return this;
     }
@@ -36,7 +36,7 @@ public class QSQBuilder extends QueryBuilder {
         return this.fields;
     }
 
-    public QSQBuilder setFields(String[] fields) {
+    public QueryStringBuilder setFields(String[] fields) {
         this.fields = fields;
         return this;
     }
