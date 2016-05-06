@@ -4,11 +4,13 @@ import org.ap.core.Helpers;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by ymetelkin on 5/5/16.
  */
 public class QueryStringParser {
+    private Map<String, String> fieldMap;
     private char[] chars;
     private int position;
     private boolean isField;
@@ -16,6 +18,10 @@ public class QueryStringParser {
     private char last;
     private List<String> list;
     private StringBuilder current;
+
+    public QueryStringParser(Map<String, String> fieldMap) {
+        this.fieldMap = fieldMap;
+    }
 
     public String parse(String query) {
         query = Helpers.safeTrim(query);
@@ -29,14 +35,14 @@ public class QueryStringParser {
         this.current = new StringBuilder();
 
         while (this.position < this.chars.length) {
-            char chr = next();
+            char chr = nextChar();
 
             switch (chr) {
                 case '"':
                     parseQuotes();
                     break;
                 case ':':
-                    parseFieldName();
+                    parseField();
                     break;
                 case ' ':
                     parseWS();
@@ -46,16 +52,6 @@ public class QueryStringParser {
                 case '\r':
                     chr = ' ';
                     parseWS();
-                    break;
-                case '[':
-                case '{':
-                    parseRange(chr);
-                    break;
-                case '/':
-                    parseRegex();
-                    break;
-                case '(':
-                    parseGroup();
                     break;
                 default:
                     processChar(chr);
@@ -75,7 +71,7 @@ public class QueryStringParser {
         StringBuilder sb = new StringBuilder();
 
         while (!isEnd) {
-            char chr = next();
+            char chr = nextChar();
             if (chr == '"') {
                 int idx = sb.length() - 1;
                 if (sb.charAt(idx) == '\\') {
@@ -105,136 +101,7 @@ public class QueryStringParser {
         }
     }
 
-    private void parseRange(char start) {
-        if (this.isField) {
-            String from = null;
-            String join = null;
-            String to = null;
-            StringBuilder sb = new StringBuilder();
-            boolean done = false;
-
-            while (this.position < this.chars.length && !done) {
-                char chr = next();
-
-                switch (chr) {
-                    case ' ':
-                        if (from == null && sb.length() > 0) {
-                            from = sb.toString();
-                            sb = new StringBuilder();
-                        } else if (from != null && join == null && sb.length() > 0) {
-                            join = sb.toString();
-                            sb = new StringBuilder();
-                        }
-                        break;
-                    case ']':
-                    case '}':
-                        if (sb.length() > 0) {
-                            to = sb.toString();
-                        }
-                        if (from != null && join.equals("TO") && to != null) {
-                            String value = String.format("%c%s %s %s%c", start, from, join, to, chr);
-                            addField(value);
-                            return;
-                        } else {
-                            done = true;
-                        }
-                        break;
-                    default:
-                        sb.append(chr);
-                }
-            }
-
-            addField();
-
-            this.list.add(" ");
-            if (from != null) {
-                this.list.add(from);
-            }
-            if (join != null) {
-                this.list.add(" ");
-                this.list.add(join);
-                this.list.add(" ");
-            }
-            if (to != null) {
-                this.list.add(to);
-            }
-        } else {
-            this.list.add(String.valueOf(start));
-        }
-    }
-
-    private void parseRegex() {
-        if (this.isField) {
-            StringBuilder sb = new StringBuilder();
-
-            while (this.position < this.chars.length) {
-                char chr = next();
-
-                switch (chr) {
-                    case '/':
-                        if (sb.length() > 0) {
-                            String value = String.format("/%s/", sb.toString());
-                            addField(value);
-                            return;
-                        } else {
-                            sb.append(chr);
-                        }
-                        break;
-                    default:
-                        sb.append(chr);
-                }
-            }
-
-            addField();
-
-            if (sb.length() > 0) {
-                this.list.add(" /");
-                this.list.add(sb.toString());
-            }
-        } else {
-            this.list.add("/");
-        }
-    }
-
-    private void parseGroup() {
-        if (this.isField) {
-            int count = 0;
-            StringBuilder sb = new StringBuilder();
-            sb.append('(');
-
-            while (this.position < this.chars.length) {
-                char chr = next();
-
-                switch (chr) {
-                    case '(':
-                        count++;
-                        break;
-                    case ')':
-                        if (count == 0) {
-                            sb.append(chr);
-                            addField(sb.toString());
-                            return;
-                        } else {
-                            count--;
-                        }
-                        break;
-                }
-
-                sb.append(chr);
-            }
-
-            addField();
-
-            if (sb.length() > 0) {
-                this.list.add(" ");
-                this.list.add(sb.toString());
-            }
-        } else {
-            this.list.add("(");
-        }
-    }
-
-    private void parseFieldName() {
+    private void parseField() {
         boolean success = true;
         boolean addSpace = true;
         String name = null;
@@ -276,12 +143,52 @@ public class QueryStringParser {
         }
 
         if (success) {
-            this.isField = true;
-            this.fieldName = name;
-
             if (!addSpace) {
                 list.remove(list.size() - 1);
                 list.remove(list.size() - 1);
+            }
+
+            this.isField = true;
+            this.fieldName = name;
+
+            StringBuilder sb = new StringBuilder();
+
+            while (this.position < this.chars.length) {
+                char chr = nextChar();
+
+                switch (chr) {
+                    case '"':
+                        parseQuotes();
+                        break;
+                    case ':':
+                        break;
+                    case ' ':
+                    case '\n':
+                    case '\t':
+                    case '\r':
+                        if (sb.length() > 0) {
+                            addField(sb.toString());
+                            this.list.add(" ");
+                            return;
+                        }
+                        break;
+                    case '[':
+                    case '{':
+                        parseRange(chr);
+                        return;
+                    case '/':
+                        parseRegex();
+                        return;
+                    case '(':
+                        parseGroup();
+                        return;
+                    default:
+                        sb.append(chr);
+                }
+            }
+
+            if (sb.length() > 0) {
+                addField(sb.toString());
             }
         } else if (addSpace) {
             this.list.add(name);
@@ -289,23 +196,151 @@ public class QueryStringParser {
         }
     }
 
+    private void parseRange(char start) {
+        String from = null;
+        String join = null;
+        String to = null;
+        StringBuilder sb = new StringBuilder();
+        boolean done = false;
+
+        while (this.position < this.chars.length && !done) {
+            char chr = nextChar();
+
+            switch (chr) {
+                case ' ':
+                    if (from == null && sb.length() > 0) {
+                        from = sb.toString();
+                        sb = new StringBuilder();
+                    } else if (from != null && join == null && sb.length() > 0) {
+                        join = sb.toString();
+                        sb = new StringBuilder();
+                    }
+                    break;
+                case ']':
+                case '}':
+                    if (sb.length() > 0) {
+                        to = sb.toString();
+                    }
+                    if (from != null && join.equalsIgnoreCase("TO") && to != null) {
+                        String value = String.format("%c%s TO %s%c", start, from, to, chr);
+                        addField(value);
+                        return;
+                    } else {
+                        done = true;
+                    }
+                    break;
+                default:
+                    sb.append(chr);
+            }
+        }
+
+        addField();
+
+        this.list.add(" ");
+        if (from != null) {
+            this.list.add(from);
+        }
+
+        if (join != null) {
+            this.list.add(" ");
+            this.list.add(join);
+            this.list.add(" ");
+        }
+
+        if (sb.length() > 0) {
+            to = sb.toString();
+        }
+        if (to != null) {
+            this.list.add(to);
+        }
+    }
+
+    private void parseRegex() {
+        StringBuilder sb = new StringBuilder();
+
+        while (this.position < this.chars.length) {
+            char chr = nextChar();
+
+            switch (chr) {
+                case '/':
+                    if (sb.length() > 0) {
+                        String value = String.format("/%s/", sb.toString());
+                        addField(value);
+                        return;
+                    } else {
+                        sb.append(chr);
+                    }
+                    break;
+                default:
+                    sb.append(chr);
+            }
+        }
+
+        addField();
+
+        if (sb.length() > 0) {
+            this.list.add(" /");
+            this.list.add(sb.toString());
+        }
+    }
+
+    private void parseGroup() {
+        int count = 0;
+        StringBuilder sb = new StringBuilder();
+        sb.append('(');
+
+        while (this.position < this.chars.length) {
+            char chr = nextChar();
+
+            switch (chr) {
+                case '(':
+                    count++;
+                    break;
+                case ')':
+                    if (count == 0) {
+                        sb.append(chr);
+                        addField(sb.toString());
+                        return;
+                    } else {
+                        count--;
+                    }
+                    break;
+            }
+
+            sb.append(chr);
+        }
+
+        addField();
+
+        if (sb.length() > 0) {
+            this.list.add(" ");
+            this.list.add(sb.toString());
+        }
+    }
+
     private void processChar(char chr) {
         this.current.append(chr);
     }
 
-    private char next() {
+    private char nextChar() {
         return this.chars[this.position++];
     }
 
-    private String last() {
+    private String lastToken() {
         int size = this.list.size();
         return size == 0 ? "" : this.list.get(size - 1);
     }
 
     private void addField(String value) {
-        this.list.add(this.fieldName);
-        this.list.add(":");
-        this.list.add(value);
+        String field = this.fieldName.toLowerCase();
+        if (this.fieldMap.containsKey(field)) {
+            String map = this.fieldMap.get(field); //TODO map field name
+        } else {
+            this.list.add(this.fieldName);
+            this.list.add(":");
+            this.list.add(value);
+        }
+
         this.isField = false;
         this.fieldName = null;
     }

@@ -22,6 +22,11 @@
             <version>0.4.4</version>
         </dependency>
         <dependency>
+            <groupId>nginx-clojure</groupId>
+            <artifactId>nginx-clojure-embed</artifactId>
+            <version>0.4.3</version>
+        </dependency>
+        <dependency>
             <groupId>org.elasticsearch</groupId>
             <artifactId>elasticsearch</artifactId>
             <version>2.3.2</version>
@@ -30,6 +35,11 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.12</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.5.2</version>
         </dependency>
     </dependencies>
 
