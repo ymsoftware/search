@@ -1,6 +1,8 @@
 package org.ap.core;
 
 import org.ap.core.json.JsonParsingException;
+import org.ap.core.search.QEConfig;
+import org.ap.core.search.QEService;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.settings.Settings;
@@ -16,6 +18,7 @@ import java.net.InetSocketAddress;
 public class Startup {
     private ConfigManager config;
     private SearchService search;
+    private QEService qe;
 
     private static Startup instance = new Startup();
 
@@ -29,6 +32,10 @@ public class Startup {
 
     public SearchService getSearch() {
         return this.search;
+    }
+
+    public QEService getQE() {
+        return this.qe;
     }
 
     private Startup() {
@@ -46,6 +53,7 @@ public class Startup {
         this.config = configs;
 
         initSearch();
+        initQE();
     }
 
     private void initSearch() {
@@ -85,5 +93,44 @@ public class Startup {
         }
 
         this.search = new SearchService(client, config);
+    }
+
+    private void initQE() {
+        Client client;
+
+        QEConfig config = this.config.getQEConfig();
+
+        String host = Helpers.safeTrim(config.getHost());
+        if (host == null) {
+            host = "127.0.0.1";
+        }
+
+        int port = config.getPort();
+        if (port == 0) {
+            port = 9300;
+        }
+
+        InetSocketTransportAddress address = new InetSocketTransportAddress(new InetSocketAddress(host, port));
+
+        String cluster = Helpers.safeTrim(config.getCluster());
+        if (cluster == null) {
+            client = TransportClient
+                    .builder()
+                    .build()
+                    .addTransportAddress(address);
+        } else {
+            Settings settings = Settings
+                    .settingsBuilder()
+                    .put("cluster.name", cluster)
+                    .build();
+
+            client = TransportClient
+                    .builder()
+                    .settings(settings)
+                    .build()
+                    .addTransportAddress(address);
+        }
+
+        this.qe = new QEService(client, config);
     }
 }

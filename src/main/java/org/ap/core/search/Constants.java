@@ -24,4 +24,7 @@ public class Constants {
     public static final String APPL_PRODUCTS = "filings.products";
     public static final String APPL_EXPANDED_SID_OUTS = "filings.routings.expandedsidouts";
     public static final String APPL_RELEASEDATETIME = "releasedatetime";
+
+    public static final String QE_TERM = "terms.term";
+    public static final String QE_SCORE = "terms.score";
 }

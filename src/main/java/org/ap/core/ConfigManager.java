@@ -1,6 +1,7 @@
 package org.ap.core;
 
 import org.ap.core.json.*;
+import org.ap.core.search.QEConfig;
 import org.ap.core.search.SearchConfig;
 
 import java.io.InputStream;
@@ -12,13 +13,19 @@ import static java.lang.Math.toIntExact;
  */
 public class ConfigManager implements JsonVisitor {
     private SearchConfig searchConfig;
+    private QEConfig qeConfig;
 
     public SearchConfig getSearchConfig() {
         return this.searchConfig;
     }
 
+    public QEConfig getQEConfig() {
+        return this.qeConfig;
+    }
+
     public void load(String resourcePath) throws JsonParsingException {
         this.searchConfig = new SearchConfig();
+        this.qeConfig = new QEConfig();
 
         InputStream stream = ClassLoader.getSystemClassLoader().getResourceAsStream(resourcePath);
         JsonParser parser = new JsonInputStreamParser(stream);
@@ -41,6 +48,16 @@ public class ConfigManager implements JsonVisitor {
             this.searchConfig.setFields(jp.valueAsStringArray());
         } else if (jp.field.equals(Constants.CONFIG_SEARCH_OPERATOR)) {
             this.searchConfig.setDefaultOperator(jp.valueAsString());
+        } else if (jp.field.equals(Constants.CONFIG_QE_HOST)) {
+            this.qeConfig.setHost(jp.valueAsString());
+        } else if (jp.field.equals(Constants.CONFIG_QE_CLUSTER)) {
+            this.qeConfig.setCluster(jp.valueAsString());
+        } else if (jp.field.equals(Constants.CONFIG_QE_PORT)) {
+            this.qeConfig.setPort(jp.valueAsInt());
+        } else if (jp.field.equals(Constants.CONFIG_QE_INDEX)) {
+            this.qeConfig.setIndex(jp.valueAsString());
+        } else if (jp.field.equals(Constants.CONFIG_QE_TYPE)) {
+            this.qeConfig.setType(jp.valueAsString());
         }
     }
 }

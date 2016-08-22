@@ -28,6 +28,10 @@ public class JsonProperty {
         return toIntExact((long) this.value);
     }
 
+    public Double valueAsDouble() {
+        return (Double) this.value;
+    }
+
     public boolean valueAsBoolean() {
         return (boolean) this.value;
     }

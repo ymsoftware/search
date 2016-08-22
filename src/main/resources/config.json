@@ -10,5 +10,12 @@
       "headline^5",
       "title^4"
     ]
+  },
+  "qe":{
+    "host": "54.174.204.72",
+    "cluster": "ap",
+    "port": 9310,
+    "index": "qe",
+    "type": "terms"
   }
 }
