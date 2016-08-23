@@ -65,7 +65,7 @@ public class QEService {
             sb
                     .append("{\"query\":{\"bool\":{\"must\":{\"query_string\":{\"query\":\"")
                     .append(String.join(" ", terms))
-                    .append("\"}}},\"should\":");
+                    .append("\"}},\"should\":");
 
             if (keepScores) {
                 Map<Integer, List<String>> map = new HashMap<>();
@@ -97,12 +97,12 @@ public class QEService {
                 });
 
                 sb.deleteCharAt(sb.length() - 1);
-                sb.append("]}}");
+                sb.append("]}}}");
             } else {
                 sb
                         .append("{\"query_string\":{\"query\":\"")
                         .append(String.join(" ", scores.stream().map(e -> e.getKey()).collect(Collectors.toList())))
-                        .append("\"}}}}");
+                        .append("\"}}}}}");
             }
         } else {
             sb
