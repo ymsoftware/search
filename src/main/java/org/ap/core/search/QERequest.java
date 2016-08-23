@@ -9,6 +9,7 @@ import java.io.InputStream;
  */
 public class QERequest implements JsonVisitor {
     private String[] terms;
+    private boolean scores;
 
     public String[] getTerms() {
         return this.terms;
@@ -16,6 +17,15 @@ public class QERequest implements JsonVisitor {
 
     public QERequest setTerms(String[] terms) {
         this.terms = terms;
+        return this;
+    }
+
+    public boolean getScores() {
+        return this.scores;
+    }
+
+    public QERequest setScores(boolean scores) {
+        this.scores = scores;
         return this;
     }
 
@@ -28,6 +38,8 @@ public class QERequest implements JsonVisitor {
     public void visit(JsonProperty jp) {
         if (jp.field.equals(Constants.REQUEST_QUERY)) {
             setTerms(jp.valueAsString().split(" "));
+        } else if (jp.field.equals(Constants.REQUEST_BOOST)) {
+            setScores(jp.valueAsBoolean());
         }
     }
 }

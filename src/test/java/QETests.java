@@ -1,5 +1,6 @@
 import org.ap.core.Startup;
 import org.ap.core.json.JsonParsingException;
+import org.ap.core.search.QERequest;
 import org.ap.core.search.QEService;
 import org.ap.core.search.SearchRequest;
 import org.ap.core.search.SearchService;
@@ -15,18 +16,18 @@ import java.nio.charset.StandardCharsets;
 public class QETests {
     @Test
     public void testHandler() {
-        String json = "{ \"query\": \"obama\" }";
+        String json = "{ \"query\": \"clinton trump\", \"boost\": true }";
 
         InputStream stream = new ByteArrayInputStream(json.getBytes(StandardCharsets.UTF_8));
 
-        SearchRequest req = null;
+        QERequest req = null;
         try {
-            req = new SearchRequest(stream);
+            req = new QERequest(stream);
         } catch (JsonParsingException e) {
             e.printStackTrace();
         }
 
         QEService svc = Startup.getInstance().getQE();
-        json = svc.execute(new String[]{"clinton", "trump"});
+        json = svc.execute(req);
     }
 }

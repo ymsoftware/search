@@ -38,7 +38,7 @@ public class QEHandler implements NginxJavaRingHandler {
             }
         }
 
-        String json = this.qe.execute(req.getTerms());
+        String json = this.qe.execute(req);
 
         channel.sendResponse(new Object[]{
                 NGX_HTTP_OK,

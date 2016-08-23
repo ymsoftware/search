@@ -17,7 +17,7 @@ public class QEResults implements JsonVisitor {
         this.scores = new HashMap<String, Double>();
     }
 
-    public List<Map.Entry<String, Double>> getScores() {
+    public List<Map.Entry<String, Double>> getScores(String[] terms) {
         Comparator<Map.Entry<String, Double>> sort = (entry1, entry2) -> {
             Double v2 = entry2.getValue();
             Double v1 = entry1.getValue();
@@ -27,6 +27,7 @@ public class QEResults implements JsonVisitor {
         List<Map.Entry<String, Double>> results = this.scores
                 .entrySet()
                 .stream()
+                .filter(e -> Unique(terms, e.getKey()))
                 .sorted(sort)
                 .limit(10)
                 .collect(Collectors.toList());
@@ -56,5 +57,15 @@ public class QEResults implements JsonVisitor {
             }
             this.scores.put(this.term, score);
         }
+    }
+
+    private boolean Unique(String[] terms, String term) {
+        for (int i = 0; i < terms.length; i++) {
+            if (terms[i].compareTo(term) == 0) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

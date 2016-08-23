@@ -13,6 +13,7 @@ public class Constants {
     public static final String REQUEST_FIELDS = "fields";
     public static final String REQUEST_FROM = "from";
     public static final String REQUEST_SIZE = "size";
+    public static final String REQUEST_BOOST = "boost";
 
     public static final String QSQ_QUERY = "query";
     public static final String QSQ_QUERY_STRING = "query_string";
