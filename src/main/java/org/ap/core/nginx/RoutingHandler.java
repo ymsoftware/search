@@ -20,6 +20,11 @@ public class RoutingHandler implements NginxJavaRingHandler {
 
     @Override
     public Object[] invoke(Map<String, Object> request) throws IOException {
-        return handlers.get(request.get(Constants.REQUEST_URI)).invoke(request);
+        String uri = request.get(Constants.REQUEST_URI).toString();
+        while (uri.endsWith("/")) {
+            uri = uri.substring(0, uri.length() - 1);
+        }
+
+        return handlers.get(uri).invoke(request);
     }
 }
