@@ -1,12 +1,10 @@
 package org.ap.core;
 
 import org.ap.core.json.*;
-import org.ap.core.search.QEConfig;
+import org.ap.core.qe.QEConfig;
 import org.ap.core.search.SearchConfig;
 
 import java.io.InputStream;
-
-import static java.lang.Math.toIntExact;
 
 /**
  * Created by yuri on 4/28/16.
@@ -58,6 +56,8 @@ public class ConfigManager implements JsonVisitor {
             this.qeConfig.setIndex(jp.valueAsString());
         } else if (jp.field.equals(Constants.CONFIG_QE_TYPE)) {
             this.qeConfig.setType(jp.valueAsString());
+        }else if (jp.field.equals(Constants.CONFIG_QE_DAYS)) {
+            this.qeConfig.setDays(jp.valueAsInt());
         }
     }
 }

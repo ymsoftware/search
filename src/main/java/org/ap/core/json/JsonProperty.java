@@ -1,5 +1,7 @@
 package org.ap.core.json;
 
+import org.joda.time.DateTime;
+
 import java.util.List;
 
 import static java.lang.Math.toIntExact;
@@ -25,7 +27,7 @@ public class JsonProperty {
     }
 
     public int valueAsInt() {
-        return toIntExact((long) this.value);
+        return toIntExact((Long) this.value);
     }
 
     public Double valueAsDouble() {
@@ -34,6 +36,10 @@ public class JsonProperty {
 
     public boolean valueAsBoolean() {
         return (boolean) this.value;
+    }
+
+    public DateTime valueAsDateTime() {
+        return DateTime.parse((String) this.value);
     }
 
     public String[] valueAsStringArray() {

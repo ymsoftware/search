@@ -1,6 +1,5 @@
-package org.ap.core.search;
+package org.ap.core.qe;
 
-import org.ap.core.json.JsonInputStreamParser;
 import org.ap.core.json.JsonParser;
 import org.ap.core.json.JsonParsingException;
 import org.ap.core.json.JsonStringParser;

@@ -13,7 +13,6 @@ public class Constants {
     public static final String REQUEST_FIELDS = "fields";
     public static final String REQUEST_FROM = "from";
     public static final String REQUEST_SIZE = "size";
-    public static final String REQUEST_BOOST = "boost";
 
     public static final String QSQ_QUERY = "query";
     public static final String QSQ_QUERY_STRING = "query_string";
@@ -25,7 +24,4 @@ public class Constants {
     public static final String APPL_PRODUCTS = "filings.products";
     public static final String APPL_EXPANDED_SID_OUTS = "filings.routings.expandedsidouts";
     public static final String APPL_RELEASEDATETIME = "releasedatetime";
-
-    public static final String QE_TERM = "terms.term";
-    public static final String QE_SCORE = "terms.score";
 }

@@ -1,9 +1,11 @@
 package org.ap.core.search;
 
+import org.ap.core.ESClientConfig;
+
 /**
  * Created by yuri on 4/27/16.
  */
-public class SearchConfig {
+public class SearchConfig implements ESClientConfig {
     private String host;
     private String cluster;
     private int port;

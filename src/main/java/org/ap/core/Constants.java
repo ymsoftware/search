@@ -17,4 +17,5 @@ public class Constants {
     public static final String CONFIG_QE_PORT = "qe.port";
     public static final String CONFIG_QE_INDEX = "qe.index";
     public static final String CONFIG_QE_TYPE = "qe.type";
+    public static final String CONFIG_QE_DAYS = "qe.days";
 }

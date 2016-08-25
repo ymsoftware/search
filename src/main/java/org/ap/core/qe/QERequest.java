@@ -1,4 +1,4 @@
-package org.ap.core.search;
+package org.ap.core.qe;
 
 import org.ap.core.json.*;
 

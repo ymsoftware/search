@@ -11,11 +11,12 @@
       "title^4"
     ]
   },
-  "qe":{
-    "host": "127.0.0.1",
+  "qe": {
+    "host": "54.174.204.72",
     "cluster": "ap",
     "port": 9310,
     "index": "qe",
-    "type": "terms"
+    "type": "terms",
+    "days": 10
   }
 }

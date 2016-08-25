@@ -1,9 +1,12 @@
-package org.ap.core.search;
+package org.ap.core.qe;
 
 import org.ap.core.json.JsonProperty;
 import org.ap.core.json.JsonVisitor;
 
-import java.util.*;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -27,7 +30,7 @@ public class QEResults implements JsonVisitor {
         List<Map.Entry<String, Double>> results = this.scores
                 .entrySet()
                 .stream()
-                .filter(e -> Unique(terms, e.getKey()))
+                .filter(e -> unique(terms, e.getKey()))
                 .sorted(sort)
                 .limit(10)
                 .collect(Collectors.toList());
@@ -59,7 +62,7 @@ public class QEResults implements JsonVisitor {
         }
     }
 
-    private boolean Unique(String[] terms, String term) {
+    private boolean unique(String[] terms, String term) {
         for (int i = 0; i < terms.length; i++) {
             if (terms[i].compareTo(term) == 0) {
                 return false;

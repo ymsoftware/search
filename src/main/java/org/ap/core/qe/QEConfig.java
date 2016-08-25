@@ -1,14 +1,20 @@
-package org.ap.core.search;
+package org.ap.core.qe;
+
+import org.ap.core.ESClientConfig;
+
+import java.util.List;
 
 /**
  * Created by ymetelkin on 8/22/16.
  */
-public class QEConfig {
+public class QEConfig  implements ESClientConfig {
     private String host;
     private String cluster;
     private int port;
     private String index;
     private String type;
+    private int days;
+    private List<String> stopwords;
 
     public String getHost() {
         return this.host;
@@ -52,6 +58,24 @@ public class QEConfig {
 
     public QEConfig setType(String type) {
         this.type = type;
+        return this;
+    }
+
+    public int getDays() {
+        return this.days;
+    }
+
+    public QEConfig setDays(int days) {
+        this.days = days;
+        return this;
+    }
+
+    public List<String> getStopwords() {
+        return this.stopwords;
+    }
+
+    public QEConfig setStopwords(List<String> stopwords) {
+        this.stopwords = stopwords;
         return this;
     }
 }

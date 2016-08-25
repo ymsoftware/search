@@ -5,8 +5,8 @@ import nginx.clojure.java.NginxJavaRequest;
 import nginx.clojure.java.NginxJavaRingHandler;
 import org.ap.core.Startup;
 import org.ap.core.json.JsonParsingException;
-import org.ap.core.search.QERequest;
-import org.ap.core.search.QEService;
+import org.ap.core.qe.QERequest;
+import org.ap.core.qe.QEService;
 
 import java.io.IOException;
 import java.io.InputStream;
