@@ -14,6 +14,7 @@ public class QEConfig  implements ESClientConfig {
     private String index;
     private String type;
     private int days;
+    private double sameSentenceWeight;
     private List<String> stopwords;
 
     public String getHost() {
@@ -67,6 +68,15 @@ public class QEConfig  implements ESClientConfig {
 
     public QEConfig setDays(int days) {
         this.days = days;
+        return this;
+    }
+
+    public double getSameSentenceWeight() {
+        return this.sameSentenceWeight;
+    }
+
+    public QEConfig setSameSentenceWeight(double sameSentenceWeight) {
+        this.sameSentenceWeight = sameSentenceWeight;
         return this;
     }
 

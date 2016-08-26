@@ -56,8 +56,10 @@ public class ConfigManager implements JsonVisitor {
             this.qeConfig.setIndex(jp.valueAsString());
         } else if (jp.field.equals(Constants.CONFIG_QE_TYPE)) {
             this.qeConfig.setType(jp.valueAsString());
-        }else if (jp.field.equals(Constants.CONFIG_QE_DAYS)) {
+        } else if (jp.field.equals(Constants.CONFIG_QE_DAYS)) {
             this.qeConfig.setDays(jp.valueAsInt());
+        } else if (jp.field.equals(Constants.CONFIG_QE_SAME_SENTENCE_WEIGTH)) {
+            this.qeConfig.setSameSentenceWeight(jp.valueAsDouble());
         }
     }
 }

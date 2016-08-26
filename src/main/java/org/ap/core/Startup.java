@@ -66,8 +66,8 @@ public class Startup {
         configs.load("config.json");
         this.config = configs;
 
-        //initSearch();
-        //initQE();
+        initSearch();
+        initQE();
         initDocumentService();
     }
 
@@ -80,10 +80,6 @@ public class Startup {
     private void initQE() {
         QEConfig config = this.config.getQEConfig();
         Client client = initClient(config);
-
-        //List<String> stopwords=new ArrayList<>();
-        //InputStream stream = ClassLoader.getSystemClassLoader().getResourceAsStream("stopwords.txt");
-
         this.qe = new QEService(client, config);
     }
 

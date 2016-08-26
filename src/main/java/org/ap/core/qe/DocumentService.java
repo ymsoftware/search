@@ -1,6 +1,8 @@
 package org.ap.core.qe;
 
 import org.ap.core.json.*;
+import org.elasticsearch.action.bulk.BulkRequestBuilder;
+import org.elasticsearch.action.bulk.BulkResponse;
 import org.elasticsearch.action.get.GetResponse;
 import org.elasticsearch.client.Client;
 import org.joda.time.DateTime;
@@ -8,6 +10,8 @@ import org.joda.time.DateTime;
 import java.io.InputStream;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static org.elasticsearch.common.xcontent.XContentFactory.jsonBuilder;
 
 /**
  * Created by ymetelkin on 8/25/16.
@@ -33,6 +37,8 @@ public class DocumentService {
         if (terms != null) {
             DateTime ts = DateTime.now();
 
+            BulkRequestBuilder brb = this.client.prepareBulk();
+
             for (String key : terms.keySet()) {
                 QETerm term = terms.get(key);
 
@@ -48,7 +54,30 @@ public class DocumentService {
                 }
 
                 term.calculate(ts, days);
+
+                List<String> array = term
+                        .getTerms()
+                        .stream()
+                        .map(e -> String.format("{\"term\":\"%s\",\"score\":%f}", e.getTerm(), e.getScore()))
+                        .collect(Collectors.toList());
+                String json = String.format("{\"terms\":[%s]}", String.join(",", array));
+                brb.add(this.client.prepareIndex(index, "terms", key).setSource(json));
+
+                array = term
+                        .getHistory()
+                        .stream()
+                        .map(e -> String.format("{\"term\":\"%s\",\"score\":%f,\"timestamp\":\"%s\"}", e.getTerm(), e.getScore(), e.getTimestamp()))
+                        .collect(Collectors.toList());
+                json = String.format("{\"terms\":[%s]}", String.join(",", array));
+                brb.add(this.client.prepareIndex(index, "history", key).setSource(json));
             }
+
+            BulkResponse response = brb.get();
+            if (response.hasFailures()) {
+                // process failures by iterating through each bulk response item
+            }
+
+            //return response.toString();
         }
 
         return null;
@@ -56,13 +85,16 @@ public class DocumentService {
 
     private Map<String, QETerm> parse(DocumentRequest request) {
         Map<String, QETerm> terms = new HashMap<>();
+        Map<Double, List<String>> fields = new HashMap<>();
 
         DateTime timestamp = request.getTimestamp();
-        String headline = request.getHeadline();
-        String title = request.getTitle();
 
-        addTerms(terms, parseField(headline), 1);
-        addTerms(terms, parseField(title), 1);
+        List<String> list = new ArrayList<>();
+        list.add(request.getHeadline());
+        list.add(request.getTitle());
+        fields.put(1.0, list);
+
+        fields.entrySet().forEach(e -> addTerms(terms, e.getKey(), e.getValue(), this.config.getSameSentenceWeight()));
 
         if (terms.size() == 0) return null;
 
@@ -145,24 +177,38 @@ public class DocumentService {
         }
     }
 
-    private void addTerms(Map<String, QETerm> terms, List<List<String>> sentences, double score) {
-        for (List<String> sentence : sentences) {
-            for (String token : sentence) {
-                QETerm term = terms.containsKey(token) ? terms.get(token) : new QETerm(token);
+    private void addTerms(Map<String, QETerm> terms, double score, List<String> fields, double sameSentenceWeight) {
+        for (String field : fields) {
+            List<List<String>> sentences = parseField(field);
 
-                for (String t : sentence) {
-                    if (t.compareTo(token) != 0) {
-                        term.addHistory(t, score, DateTime.now());
-                    }
+            for (int i = 0; i < sentences.size(); i++) {
+                List<String> sentence = sentences.get(i);
+
+                for (String token : sentence) {
+                    QETerm term = terms.containsKey(token) ? terms.get(token) : new QETerm(token);
+                    addHistory(term, sentences, i, score, sameSentenceWeight);
+                    terms.put(token, term);
                 }
+            }
+        }
+    }
 
-                terms.put(token, term);
+    private void addHistory(QETerm term, List<List<String>> sentences, int sentenceIndex, double weight, double sameSentenceWeight) {
+        for (int i = 0; i < sentences.size(); i++) {
+            List<String> sentence = sentences.get(i);
+
+            for (String token : sentence) {
+                if (token.compareTo(term.getTerm()) != 0) {
+                    double score = i == sentenceIndex ? weight * sameSentenceWeight : weight;
+                    term.addHistory(token, score, DateTime.now());
+                }
             }
         }
     }
 
     private List<TermScoreTimestamp> getHistory(String index, String type, String id) {
         GetResponse response = client.prepareGet(index, type, id).get();
+        if (response.isSourceEmpty()) return null;
 
         Object test = response.getSource().get("terms");
         if (test == null) return null;

@@ -7,8 +7,13 @@ import org.ap.core.qe.QEService;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Created by ymetelkin on 8/22/16.
@@ -33,9 +38,17 @@ public class QETests {
 
     @Test
     public void testDocument() {
-        String json = "{ \"headline\": \"clinton private email server. clinton visits ukraine\", \"arrivaldatetime\": \"2016-08-25T00:00:00\" }";
+        //String json = "{ \"headline\": \"clinton private email server. clinton visits ukraine\", \"arrivaldatetime\": \"2016-08-25T00:00:00\" }";
 
-        InputStream stream = new ByteArrayInputStream(json.getBytes(StandardCharsets.UTF_8));
+        String path = ClassLoader.getSystemClassLoader().getResource("testdoc.json").getFile();
+        byte[] bytes = new byte[0];
+        try {
+            bytes = Files.readAllBytes(Paths.get(path));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        InputStream stream = new ByteArrayInputStream(bytes);
 
         DocumentRequest req = null;
         try {
@@ -45,6 +58,6 @@ public class QETests {
         }
 
         DocumentService svc = Startup.getInstance().getDocumentService();
-        json = svc.execute(req);
+        String json = svc.execute(req);
     }
 }

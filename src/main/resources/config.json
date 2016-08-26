@@ -17,6 +17,7 @@
     "port": 9310,
     "index": "qe",
     "type": "terms",
-    "days": 10
+    "days": 4,
+    "sameSentenceWeight": 2.0
   }
 }
